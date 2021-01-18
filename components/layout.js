@@ -1,17 +1,18 @@
-//components/layout.js
 import Head from 'next/head';
 import HeaderNavbar from './navbar';
+import { Container } from 'react-bootstrap';
+
 const Layout = (props) => {
     return(
         <div>
             <Head>
-                <title>Hello Next.js</title>
+                <title>Recipes</title>
                 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" />
             </Head>
             <HeaderNavbar />
-            <div className="container">
+            <Container fluid className="mt-3">
                 {props.children}
-            </div>
+            </Container>
         </div>
     );
 }
