@@ -23,14 +23,14 @@ const Layout = (props) => {
                 <title>Recipes</title>
                 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" />
             </Head>
-            {(loading && router.pathname == '/') ? 
+            {((loading || !session) && router.pathname == '/') ? 
             <Container className="min-vh-100">
                 <Row className="min-vh-100 justify-content-center align-items-center">
                     <Spinner variant="secondary" animation="border" role="status" style={{margin: 'auto', width: '200px', height: '200px', borderWidth: '1em'}}/>
                 </Row>
             </Container>
             : <><HeaderNavbar />
-            <Container fluid className="mt-3">
+            <Container fluid className="mt-3 pb-3">
                 {props.children}
             </Container></> }
         </div>

@@ -68,10 +68,10 @@ const RecipeForm = (props) => {
                 <Form.Group>
                     <Form.Label>Ingredients</Form.Label>
                     <Form.Row>
-                        <Col md={7}>
+                        <Col xs={9}>
                             {showIngredientsInputs(values, handleChange)}
                         </Col>
-                        <Col md={2}>
+                        <Col xs={2}>
                             <Button onClick={() => setIngredientsAmount(ingredientsAmount+1)}>Add</Button>
                         </Col>
                     </Form.Row>

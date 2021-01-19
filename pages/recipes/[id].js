@@ -14,7 +14,7 @@ const Recipe = () => {
     const router = useRouter();
     const { id } = router.query;
     const { data, error } = useSwr(session && session.id ? `/api/${session.id}/recipes/${id}` : null, fetcherGet);
-    
+
     const share = () => {
         const res = fetcherPost(`/api/${session.id}/recipes/share/${id}`, {username: username});
         router.push('/recipes');
@@ -37,10 +37,10 @@ const Recipe = () => {
                     <Form.Group controlId="shareUsername">
                     <Form.Label>Share with Github user</Form.Label>
                         <Form.Row>
-                            <Col md={7}>
+                            <Col xs={9}>
                                 <Form.Control type="text" name="username" placeholder="Enter username" onChange={(e) => setUsername(e.target.value)} value={username}/>
                             </Col>
-                            <Col md={2}>
+                            <Col xs={2}>
                                 <Button onClick={share}><Share></Share></Button>
                             </Col>
                         </Form.Row>

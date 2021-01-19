@@ -1,4 +1,4 @@
-import { Card, Row, Button, Nav } from 'react-bootstrap';
+import { Card, Row, Button, Col } from 'react-bootstrap';
 import { useRouter } from 'next/router';
 import { Pencil } from 'react-bootstrap-icons';
 import { useSession } from 'next-auth/client';
@@ -10,14 +10,14 @@ const Recipe = (props) => {
     return (
         <Card key={props._id} bg={'light'}>
         <Card.Header>
-            <Nav variant="pills" className="justify-content-between">
-                <Nav.Item>    
-                    <h4 className="align-middle">{props.title}</h4>
-                </Nav.Item>
-                {props.createdBy === session.id && <Nav.Item>    
-                    <Button variant="warning" onClick={() => router.push(`/recipes/${props._id}`)}><Pencil/></Button>
-                </Nav.Item>}
-            </Nav>
+            <Row className="justify-content-between">
+                <Col xs={9} md={10}>    
+                    <h5 className="align-middle">{props.title}</h5>
+                </Col>
+                {props.createdBy === session.id && <Col xs={3} md={2}>    
+                    <Button variant="outline-warning" onClick={() => router.push(`/recipes/${props._id}`)}><Pencil/></Button>
+                </Col>}
+            </Row>
         </Card.Header>
         <Card.Body>
             <Card.Subtitle className="mb-2 text-muted">{props.description}</Card.Subtitle>
