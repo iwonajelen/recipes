@@ -4,9 +4,11 @@ import { signIn, signOut, useSession } from 'next-auth/client';
 import { Button, Nav, Navbar, Form, FormControl, Row, Col, Container } from 'react-bootstrap';
 import { useMediaQuery } from 'react-responsive';
 import { Search } from 'react-bootstrap-icons';
+import { useRouter } from 'next/router';
 
 const HeaderNavbar = () => {  
     const [ session, loading ] = useSession();
+    const router = useRouter();
     const [ searchQuery, setSearchQuery] = useState("");
 
     const isTabletOrMobile = useMediaQuery({ query: '(max-width: 1224px)' });
@@ -42,7 +44,7 @@ const HeaderNavbar = () => {
                 <Button variant="secondary" onClick={signOut}>Sign out</Button>
             </>}
         </Navbar>
-        {session && isTabletOrMobile &&
+        {session && isTabletOrMobile && router.pathname === '/recipes' &&
         <Container className="mt-3">
         <Form inline>
             <Row>
