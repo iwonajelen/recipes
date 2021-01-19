@@ -19,15 +19,17 @@ const HeaderNavbar = () => {
     return(
         <Navbar bg="dark" variant="dark" className="justify-content-around">
             <Nav className="mr-auto">
-            {session && <Link href="/recipes"><a className="nav-link">Recipes</a></Link>}
-            {session && <Link href="/new-recipe"><a className="nav-link">Create</a></Link>}
+            {session && <>
+            <Link href="/recipes"><a className="nav-link">Recipes</a></Link>
+            <Link href="/new-recipe"><a className="nav-link">Create</a></Link></>}
             </Nav>
+            {session && <>
             <Form inline>
                 <FormControl type="text" placeholder="Search" className="mr-sm-2" onChange={(e) => setSearchQuery(e.target.value)} />
                 <Link href={hrefObj()}>
                     <Button variant="success">Search</Button>
                 </Link>
-            </Form>
+            </Form></>}
             {!session && <Button onClick={signIn}>Sign in</Button>}
             {session && session.user.name && <>
                 <Navbar.Text style={{margin: 'auto 20px'}}>
