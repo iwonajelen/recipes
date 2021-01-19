@@ -9,6 +9,13 @@ const options = {
     })
   ],
 
+  callbacks: {
+    session: async (session, user) => {
+      session.id = user.id
+      return Promise.resolve(session)
+    }
+  },
+
   database: process.env.MONGODB_URI
 };
 

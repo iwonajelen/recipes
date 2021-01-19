@@ -18,10 +18,9 @@ const HeaderNavbar = () => {
 
     return(
         <Navbar bg="dark" variant="dark" className="justify-content-around">
-            <Navbar.Brand href="#home">Navbar</Navbar.Brand>
             <Nav className="mr-auto">
-            <Link href="/"><a className="nav-link">Home</a></Link>
-            <Link href="/recipes"><a className="nav-link">Recipes</a></Link>
+            {session && <Link href="/recipes"><a className="nav-link">Recipes</a></Link>}
+            {session && <Link href="/new-recipe"><a className="nav-link">Create</a></Link>}
             </Nav>
             <Form inline>
                 <FormControl type="text" placeholder="Search" className="mr-sm-2" onChange={(e) => setSearchQuery(e.target.value)} />

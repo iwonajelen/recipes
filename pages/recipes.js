@@ -3,12 +3,13 @@ import Recipe from "../components/recipe";
 import useSwr from 'swr';
 import { useRouter } from 'next/router';
 import { CardColumns } from "react-bootstrap";
-
-const fetcher = (url) => fetch(url).then((res) => res.json())
+import { fetcherGet } from "../util/fetchUtils";
+import { useSession } from 'next-auth/client';
 
 const Recipes = () => {
-    const router = useRouter()
-    const { data, error } = useSwr('/api/recipes', fetcher);
+    const [ session, loading ] = useSession();
+    const router = useRouter();
+    const { data, error } = useSwr(session && session.id ? `/api/${session.id}/recipes` : null, fetcherGet);
 
     const showRecipes = (data) => {
         if(router.query) {
@@ -17,7 +18,7 @@ const Recipes = () => {
                 return data.filter(recipe => {
                     return recipe.title.toLowerCase().includes(searchQuery) ||
                         (recipe.description && recipe.description.toLowerCase().includes(searchQuery)) ||
-                        recipe.link.toLowerCase().includes(searchQuery)
+                        recipe.url.toLowerCase().includes(searchQuery)
                 }).map(recipe => Recipe(recipe));
             }
         }
