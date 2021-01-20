@@ -18,7 +18,7 @@ const Recipe = () => {
         const sessionData = await getSession();
         if(sessionData && sessionData.id) {
             const res = await fetcherGet(`/api/${sessionData.id}/recipes/${id}`);
-            console.log("res",res)
+            setData(res);
         }
     }, []);
 
