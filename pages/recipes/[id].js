@@ -3,12 +3,13 @@ import Layout from "../../components/layout";
 import RecipeForm from '../../components/recipeForm';
 import { useRouter } from 'next/router';
 import { fetcherGet, fetcherPost, fetcherDelete, fetcherUpdate } from "../../util/fetchUtils";
-import { Button, Form, Container, Col } from 'react-bootstrap';
+import { Button, Form, Container, Col, Alert } from 'react-bootstrap';
 import { Share } from 'react-bootstrap-icons';
 import { useSession, getSession } from 'next-auth/client';
 
 const Recipe = () => {
     const [ session, loading ] = useSession();
+    const [ error, setError ] = useState(null);
     const [username, setUsername] = useState("");
     const [data, setData] = useState(null);
     const router = useRouter();
@@ -24,7 +25,12 @@ const Recipe = () => {
 
     const share = async () => {
         const res = await fetcherPost(`/api/${session.id}/recipes/share/${id}`, {username: username});
-        router.push('/recipes');
+        if(res.error) {
+            setError(res.error);
+        } else if(!!error) {
+            setError(null);
+            router.push('/recipes');
+        }
     }
 
     const remove = async () => {
@@ -55,6 +61,11 @@ const Recipe = () => {
                             </Col>
                             <Col xs={2}>
                                 <Button onClick={share}><Share></Share></Button>
+                            </Col>
+                        </Form.Row>
+                        <Form.Row>
+                            <Col xs={9}>
+                                {!!error && <Alert variant="danger" className="mt-3" onClose={() => setError(null)} dismissible>{error}</Alert>}
                             </Col>
                         </Form.Row>
                     </Form.Group>

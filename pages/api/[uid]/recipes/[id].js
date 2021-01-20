@@ -41,12 +41,14 @@ export default async (req, res) => {
 
           const users = [...recipe.users].map(userId => new ObjectID(userId));
 
-          const usernames = await db
-          .collection("users")
-          .find({_id: { $in: users }}, { _id: -1, name: 1})
-          .toArray();
+          if(!!users && users.length > 0) {
+            const usernames = await db
+            .collection("users")
+            .find({_id: { $in: users }})
+            .toArray();
 
-          recipe.users = [...usernames];
+            recipe.users = [...usernames].map(user => user.name);
+          }
       
         res.status(200).json(recipe);
     } else {
