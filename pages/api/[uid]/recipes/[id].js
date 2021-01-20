@@ -20,7 +20,11 @@ export default async (req, res) => {
                     ingredients: req.body.ingredients || [],
                 } });
           
-            res.status(200).json(recipe.ops);
+            const recipeResponse = await db
+                .collection("recipes")
+                .findOne({"_id": new ObjectID(id)});
+
+            res.status(201).send(recipeResponse);
         } else {
             res.status(400).send();
         }
@@ -34,6 +38,15 @@ export default async (req, res) => {
         const recipe = await db
           .collection("recipes")
           .findOne({"_id": new ObjectID(id)});
+
+          const users = [...recipe.users].map(userId => new ObjectID(userId));
+
+          const usernames = await db
+          .collection("users")
+          .find({_id: { $in: users }}, { _id: -1, name: 1})
+          .toArray();
+
+          recipe.users = [...usernames];
       
         res.status(200).json(recipe);
     } else {

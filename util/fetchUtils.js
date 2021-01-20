@@ -1,6 +1,7 @@
 export const fetcherGet = (url) => call_get(url).then((res) => res.json());
 export const fetcherPost = (url, body) => call_post(url, body).then((res) => res.json());
 export const fetcherDelete = (url) => call_delete(url).then((res) => res.json());
+export const fetcherUpdate = (url, body) => call_put(url, body).then((res) => res.json());
 
 export const getHeaders = () => {
     return new Headers({
@@ -26,5 +27,13 @@ export const call_delete = (url) => {
     return fetch(url, {
         method: 'delete',
         headers: getHeaders()
+    })
+}
+
+export const call_put = (url, body) => {
+    return fetch(url, {
+        method: 'put',
+        headers: getHeaders(),
+        body: JSON.stringify(body)
     })
 }

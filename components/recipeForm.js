@@ -1,9 +1,21 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Formik } from 'formik';
 import { Container, Button, Form, Col } from 'react-bootstrap';
 
 const RecipeForm = (props) => {
     const [ingredientsAmount, setIngredientsAmount] = useState(1);
+    
+    useEffect(() => {
+        if(props.data) {
+            if(props.data.ingredients && props.data.ingredients.length > 0 && props.data.ingredients.length !== ingredientsAmount) {
+                setIngredientsAmount(props.data.ingredients.length);
+            }
+        }
+    }, []);
+
+    const increment = () => {
+        setIngredientsAmount(prevIngredientsAmount => prevIngredientsAmount + 1);
+    }
 
     const showIngredientsInputs = (values, handleChange) => {
         return Array.from(Array(ingredientsAmount).keys()).map(i => {
@@ -19,17 +31,9 @@ const RecipeForm = (props) => {
     }
 
     const getInitialValues = () => {
-        if(props.data) {
-            if(props.data.ingredients && props.data.ingredients.length > 0 && props.data.ingredients.length !== ingredientsAmount) {
-                setIngredientsAmount(props.data.ingredients.length);
-            }
-
-            return {
-                ...props.data
-            }
-        }
-
-        return {
+        return !!props.data ? {
+            ...props.data
+        } : {
             title: '',
             description: '',
             url: '',
@@ -72,7 +76,7 @@ const RecipeForm = (props) => {
                             {showIngredientsInputs(values, handleChange)}
                         </Col>
                         <Col xs={2}>
-                            <Button onClick={() => setIngredientsAmount(ingredientsAmount+1)}>Add</Button>
+                            <Button onClick={increment}>Add</Button>
                         </Col>
                     </Form.Row>
                 </Form.Group>

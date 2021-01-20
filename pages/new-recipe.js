@@ -6,11 +6,11 @@ import { useRouter } from 'next/router';
 
 const NewRecipe = () => {
     const [ session, loading ] = useSession();
-    const router = useRouter()
+    const router = useRouter();
 
     const onSubmit = async (data) => {
         const recipe = {...data, ingredients: data.ingredients.filter(ingredient => !!ingredient && ingredient.replace(/\s/g, "").length > 0)};
-        const result = await fetcherPost(session && session.id ? `/api/${session.id}/recipes` : null, recipe);
+        const result = await fetcherPost(`/api/${session.id}/recipes`, recipe);
         router.push('/recipes');
     }
 
