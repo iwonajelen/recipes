@@ -16,9 +16,9 @@ const Recipes = () => {
             const searchQuery = router.query.search;
             if(searchQuery) {
                 return data.filter(recipe => {
-                    return recipe.title.toLowerCase().includes(searchQuery) ||
-                        (recipe.description && recipe.description.toLowerCase().includes(searchQuery)) ||
-                        recipe.url.toLowerCase().includes(searchQuery)
+                    return recipe.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                        (recipe.description && recipe.description.toLowerCase().includes(searchQuery.toLowerCase())) ||
+                        recipe.url.toLowerCase().includes(searchQuery.toLowerCase())
                 }).map(recipe => Recipe(recipe));
             }
         }
