@@ -9,7 +9,8 @@ const NewRecipe = () => {
     const router = useRouter()
 
     const onSubmit = async (data) => {
-        const result = await fetcherPost(session && session.id ? `/api/${session.id}/recipes` : null, data);
+        const recipe = {...data, ingredients: data.ingredients.filter(ingredient => !!ingredient && ingredient.replace(/\s/g, "").length > 0)};
+        const result = await fetcherPost(session && session.id ? `/api/${session.id}/recipes` : null, recipe);
         router.push('/recipes');
     }
 
