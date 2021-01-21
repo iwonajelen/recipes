@@ -80,7 +80,7 @@ const RecipeForm = (props) => {
                         </Col>
                     </Form.Row>
                 </Form.Group>
-                <Button variant="primary" type="submit" disabled={isSubmitting}>
+                <Button variant="primary" type="submit" disabled={props.disableSubmit}>
                     Submit
                 </Button>
             </Form>

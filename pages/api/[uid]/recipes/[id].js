@@ -24,7 +24,7 @@ export default async (req, res) => {
                 .collection("recipes")
                 .findOne({"_id": new ObjectID(id)});
 
-            res.status(201).send(recipeResponse);
+            res.status(200).send(recipeResponse);
         } else {
             res.status(400).send();
         }
@@ -33,7 +33,7 @@ export default async (req, res) => {
         .collection("recipes")
         .deleteOne({"_id": new ObjectID(id), "createdBy": uid });
     
-        res.status(201).json(recipe);
+        res.status(200).json(recipe);
     } else if (req.method === 'GET')  {
         const recipe = await db
           .collection("recipes")
