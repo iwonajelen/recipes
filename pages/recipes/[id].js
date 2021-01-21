@@ -3,7 +3,7 @@ import Layout from "../../components/layout";
 import RecipeForm from '../../components/recipeForm';
 import Loading from '../../components/loading';
 import { useRouter } from 'next/router';
-import { callGet, callPost, callDelete, callPut } from "../../util/fetchUtils";
+import { getRecipe, shareRecipe, deleteRecipe, updateRecipe } from "../../util/fetchUtils";
 import { Button, Form, Container, Col, Alert, Jumbotron } from 'react-bootstrap';
 import { Share } from 'react-bootstrap-icons';
 import { useSession, getSession } from 'next-auth/client';
@@ -15,21 +15,21 @@ const Recipe = () => {
     const [ getError, setGetError ] = useState(false);
     const [ deleteError, setDeleteError ] = useState(false);
     const [ updateError, setUpdateError ] = useState(false);
-    const [ shareError, setShareError ] = useState({showError: false, message: ''});
+    const [ shareNotification, setShareNotification ] = useState({showError: false, errorMessage: '', showSuccess: false});
     const [ username, setUsername ] = useState("");
     const [data, setData] = useState(null);
     const router = useRouter();
     const { id } = router.query;
 
     useEffect(() => {
-        getRecipe();
+        loadRecipe();
     }, []);
 
-    const getRecipe = async () => {
+    const loadRecipe = async () => {
         setIsLoading(true);
         const sessionData = await getSession();
         if(sessionData && sessionData.id) {
-            const res = await callGet(`/api/${sessionData.id}/recipes/${id}`);
+            const res = await getRecipe(sessionData.id, id);
             if(res.status >= 400) {
                 setGetError(true);
             } else {
@@ -44,21 +44,23 @@ const Recipe = () => {
     const onCloseNotification = () => {
         setDeleteError(false);
         setUpdateError(false);
+        setShareNotification({showSuccess: false});
     }
 
     const share = async () => {
-        const res = await callPost(`/api/${session.id}/recipes/share/${id}`, {username: username});
+        const res = await shareRecipe(session.id, id, username);
         if(res.status === 404) {
-            setShareError({showError: true, message: <>User <strong>{username}</strong> not found</>});
+            setShareNotification({showError: true, errorMessage: <>User <strong>{username}</strong> not found</>});
         } else if(res.status >= 400) {
-            setShareError({showError: true, message: 'An error occured'});
+            setShareNotification({showError: true, errorMessage: 'An error occured'});
         } else if (res.status === 200) {
-            setShareError({showError: false, message: ''});
+            await loadRecipe();
+            setShareNotification({showError: false, errorMessage: '', showSuccess: true});
         }
     }
 
     const remove = async () => {
-        const res = await callDelete(`/api/${session.id}/recipes/${id}`);
+        const res = await deleteRecipe(session.id, id);
         if(res.status === 200) {
             router.push('/recipes');
         } else if(res.status >= 400) {
@@ -68,7 +70,7 @@ const Recipe = () => {
 
     const onSubmit = async (data) => {
         const recipe = {...data, ingredients: data.ingredients.filter(ingredient => !!ingredient && ingredient.replace(/\s/g, "").length > 0)};
-        const res = await callPut(`/api/${session.id}/recipes/${id}`, recipe);
+        const res = await updateRecipe(session.id, id, recipe);
         if(res.status === 200) {
             router.push('/recipes');
         } else if(res.status >= 400) {
@@ -92,10 +94,11 @@ const Recipe = () => {
                     <h1>Recipe not found</h1>
                     <p>An error occured while downloading this recipe</p>
                     <p>
-                        <Button variant="info" onClick={() => getRecipe()}>Refresh</Button>
+                        <Button variant="info" onClick={() => loadRecipe()}>Refresh</Button>
                     </p>
                 </Jumbotron>
             </Container>}
+            {!!shareNotification && shareNotification.showSuccess && <Notification title="Recipe shared" body={<>You have shared this recipe with <strong>{username}</strong> </>} variant={variants.success} onClose={() => onCloseNotification()}/>}
             {deleteError && <Notification title="Delete recipe" body="An error occured" variant={variants.danger} onClose={() => onCloseNotification()}/>}
             {updateError && <Notification title="Update recipe" body="An error occured" variant={variants.danger} onClose={() => onCloseNotification()}/>}
             {data && <>
@@ -117,7 +120,7 @@ const Recipe = () => {
                         </Form.Row>
                         <Form.Row>
                             <Col xs={9}>
-                                {!!shareError.showError && <Alert variant="danger" className="mt-3" onClose={() => setShareError({showError: false, message: ''})} dismissible>{shareError.message}</Alert>}
+                                {!!shareNotification.showError && <Alert variant="danger" className="mt-3" onClose={() => setShareNotification({showError: false, errorMessage: ''})} dismissible>{shareNotification.errorMessage}</Alert>}
                             </Col>
                         </Form.Row>
                     </Form.Group>

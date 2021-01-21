@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import Layout from "../components/layout";
 import RecipeForm from '../components/recipeForm';
-import { callPost } from "../util/fetchUtils";
+import { createRecipe } from "../util/fetchUtils";
 import { useSession } from 'next-auth/client';
 import { useRouter } from 'next/router';
 import { Notification, variants } from "../components/notification";
@@ -13,10 +13,12 @@ const NewRecipe = () => {
     const router = useRouter();
 
     const onSubmit = async (data) => {
+        setDisableSubmit(true);
         const recipe = {...data, ingredients: data.ingredients.filter(ingredient => !!ingredient && ingredient.replace(/\s/g, "").length > 0)};
-        const res = await callPost(`/api/${session.id}/recipess`, recipe);
+        const res = await createRecipe(session.id, recipe);
         if(res.status >= 400) {
             setShowNotification(true);
+            setDisableSubmit(false);
         } else if (res.status === 201) {
             router.push('/recipes');
         }

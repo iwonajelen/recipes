@@ -37,3 +37,31 @@ export const callPut = (url, body) => {
         body: JSON.stringify(body)
     })
 }
+
+export const getRecipes = (uid) => {
+    return callGet(`/api/${uid}/recipes`);
+}
+
+export const getRecipe = (uid, id) => {
+    return callGet(`/api/${uid}/recipes/${id}`);
+}
+
+export const createRecipe = (uid, body) => {
+    return callPost(`/api/${uid}/recipes`, body);
+}
+
+export const updateRecipe = (uid, id, body) => {
+    return callPut(`/api/${uid}/recipes/${id}`, body);
+}
+
+export const deleteRecipe = (uid, id) => {
+    return callDelete(`/api/${uid}/recipes/${id}`);
+}
+
+export const shareRecipe = (uid, id, username) => {
+    return callPost(`/api/${uid}/recipes/share/${id}`, {username: username});
+}
+
+export const unshareRecipe = (uid, id) => {
+    return callDelete(`/api/${uid}/recipes/share/${id}`);
+}

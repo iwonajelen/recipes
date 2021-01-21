@@ -5,7 +5,8 @@ export const variants = {
     primary: "primary",
     warning: "warning",
     danger: "danger",
-    info: "info"
+    info: "info",
+    success: "success"
 }
 
 export const Notification = (props) => {

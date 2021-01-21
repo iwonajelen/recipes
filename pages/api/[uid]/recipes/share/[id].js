@@ -36,11 +36,31 @@ export default async (req, res) => {
               .collection("recipes")
               .findOne({"_id": new ObjectID(id)});    
         
-          res.status(201).json(recipeResponse);
+          res.status(200).json(recipeResponse);
         }
     } else {
         res.status(400).send();
     }
+  } else if(req.method === 'DELETE') {
+    const recipe = await db
+      .collection("recipes")
+      .findOne({"_id": new ObjectID(id)});
+
+    const users = [...recipe.users];
+
+    const index = users.indexOf(uid);
+    if (index > -1) {
+      users.splice(index, 1);
+    }
+  
+    await db
+      .collection("recipes")
+      .updateOne({"_id": new ObjectID(id)}, 
+        { $set: {
+            users: users
+        } });
+
+      res.status(200).json({});
   } else {
     res.status(400).send();
   }
