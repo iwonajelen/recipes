@@ -4,7 +4,7 @@ import ShoppingListIngredients from "../components/shoppingListIngredients";
 import Loading from '../components/loading';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
-import { Tab, Container, Row, Col, Nav } from "react-bootstrap";
+import { Tab, Container, Row, Col, Nav, Button } from "react-bootstrap";
 import { getRecipes } from "../util/fetchUtils";
 import { getSession } from 'next-auth/client';
 import { useMediaQuery } from 'react-responsive';
@@ -89,6 +89,19 @@ const ShoppingList = () => {
         setIngredients(changedIngredients);
     }
 
+    const handleRemoveIngredient = (index) => {
+        const changedIngredients = [...ingredients];
+        if (index > -1) {
+            changedIngredients.splice(index, 1);
+        }   
+        setIngredients(changedIngredients);
+    }
+
+    const handleAddIngredient = () => {
+        const changedIngredients = [{value: "", checked: false}, ...ingredients];
+        setIngredients(changedIngredients);
+    }
+
     const showRecipes = (data) => {
         if(router.query) {
             const searchQuery = router.query.search;
@@ -152,10 +165,13 @@ const ShoppingList = () => {
                                     handleCheckChange={(idx, checked) => handleIngredientCheckedChange(idx, checked)}/>}
                         </Tab.Pane>
                         <Tab.Pane eventKey="edit">
+                        <Button className="mb-3" variant="success" block={isTabletOrMobile} onClick={() => handleAddIngredient()}>
+                            Add ingredient
+                        </Button>
                         {data && <ShoppingListIngredients 
                                     edit={true} 
                                     ingredients={ingredients} 
-                                    handleCheckChange={(idx, checked) => handleIngredientCheckedChange(idx, checked)}
+                                    removeIngredient={(idx) => handleRemoveIngredient(idx)}
                                     handleValueChange={(idx, value) => handleIngredientChange(idx, value)}/>}
                         </Tab.Pane>
                     </Tab.Content>

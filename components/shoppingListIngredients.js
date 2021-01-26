@@ -1,14 +1,15 @@
-import { InputGroup, FormControl, Form } from "react-bootstrap";
+import { InputGroup, FormControl, Form, Button } from "react-bootstrap";
+import { Trash } from 'react-bootstrap-icons';
 
 const ShoppingListIngredients = (props) => {
     const editableList = (ingredients) => {
         const IngredientInput = (props) => {
             return (  
                 <InputGroup className="mb-1">
-                    <InputGroup.Prepend>
-                    <InputGroup.Checkbox checked={props.checked} onChange={(e) => props.handleCheckChange(props.index, e.target.checked)} />
-                    </InputGroup.Prepend>
                     <FormControl type="text" defaultValue={props.value} onBlur={(e) => props.handleChange(props.index, e.target.value)} />
+                    <InputGroup.Append>
+                        <Button variant="danger" onClick={() => props.removeIngredient(props.index)}><Trash/></Button>
+                    </InputGroup.Append>
                 </InputGroup>
                 )
             }
@@ -20,7 +21,7 @@ const ShoppingListIngredients = (props) => {
                     index={ingredients.indexOf(ingredient)} 
                     value={ingredient.value}
                     checked={ingredient.checked}
-                    handleCheckChange={(index, checked) => props.handleCheckChange(index, checked)}
+                    removeIngredient={(index) => props.removeIngredient(index)}
                     handleChange={(index, value) => props.handleValueChange(index, value)}/>
                     )}
             </div>;
